@@ -29,6 +29,7 @@ export default function GameApp() {
 	const [playerName, setPlayerName] = useState<string>('')
 	const [highscores, setHighscores] = useState<Highscore[]>([])
 	const [winMessage, setWinMessage] = useState<string>('')
+	const [isSaved, setIsSaved] = useState<boolean>(false)
 
 	useEffect(() => {
 		loadHighscores()
@@ -65,6 +66,7 @@ export default function GameApp() {
 	}
 
 	async function handleSaveScore() {
+		if (isSaved) return
 		const name = playerName.trim()
 		if (name.length === 0) {
 			setWinMessage('Bitte gib deinen Namen ein.')
@@ -74,6 +76,7 @@ export default function GameApp() {
 			await saveHighscore(name, attempts)
 			const updated = await loadHighscores()
 			setHighscores(updated)
+			setIsSaved(true)
 			setWinMessage('Gespeichert ✅')
 		} catch {
 			setWinMessage('Fehler beim Speichern ❌')
@@ -88,6 +91,7 @@ export default function GameApp() {
 		setIsWon(false)
 		setPlayerName('')
 		setWinMessage('')
+		setIsSaved(false)
 	}
 
 	return (
@@ -109,6 +113,7 @@ export default function GameApp() {
 					onSave={handleSaveScore}
 					onNewGame={handleNewGame}
 					message={winMessage}
+					isSaved={isSaved}
 				/>
 			)}
 

@@ -6,6 +6,7 @@ type WinViewProps = {
 	onSave: () => void
 	onNewGame: () => void
 	message?: string
+	isSaved?: boolean
 }
 
 export function WinView({
@@ -16,6 +17,7 @@ export function WinView({
 	onSave,
 	onNewGame,
 	message,
+	isSaved = false,
 }: WinViewProps) {
 	return (
 		<div style={{ maxWidth: 520, margin: '40px auto', padding: 16 }}>
@@ -37,11 +39,25 @@ export function WinView({
 				<input
 					value={playerName}
 					onChange={e => onNameChange(e.target.value)}
-					onKeyDown={e => e.key === 'Enter' && onSave()}
+					onKeyDown={e => e.key === 'Enter' && !isSaved && onSave()}
 					placeholder='Dein Name'
-					style={{ padding: 10, fontSize: 16, width: 220 }}
+					disabled={isSaved}
+					style={{
+						padding: 10,
+						fontSize: 16,
+						width: 220,
+						opacity: isSaved ? 0.5 : 1,
+					}}
 				/>
-				<button onClick={onSave} style={{ padding: '10px 14px' }}>
+				<button
+					onClick={onSave}
+					disabled={isSaved}
+					style={{
+						padding: '10px 14px',
+						opacity: isSaved ? 0.5 : 1,
+						cursor: isSaved ? 'default' : 'pointer',
+					}}
+				>
 					Save
 				</button>
 			</div>
